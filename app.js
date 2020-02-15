@@ -27,43 +27,76 @@ document.getElementById('current-0').textContent = '0';
 document.getElementById('current-1').textContent = '0';
 
 // https://developer.mozilla.org/en-US/docs/Web/Events
-document.querySelector('.btn-roll').addEventListener('click', function() { // Using anonymous function instead of calling one.
+document.querySelector('.btn-roll').addEventListener('click', function() {
+    // Using anonymous function instead of calling one.
     
     // 1. Random number
     var dice = Math.floor(Math.random() * 6) + 1;
-
     // 2. Display the result.
     var diceDOM = document.querySelector('.dice')
     diceDOM.style.display = 'block';
     diceDOM.src = 'dice-' + dice +'.png';
-
     // 3. Update the round score IF the rolled number is not 1.
     if (dice !== 1) {
         // Add Score
         roundScore += dice;
         document.querySelector('#current-' + activePlayer).textContent = roundScore;
-
     } else {
+        nextPlayer();
+    }
+
+
+
+}); // Callback function, function called by a function.
+
+document.querySelector('.btn-hold').addEventListener('click', function() {
+    // Add Active Player current score to global score.
+    scores[activePlayer] += roundScore;
+    roundScore = 0;
+    // Update UI.
+    document.querySelector('#score-' + activePlayer).textContent = scores[activePlayer];
+    // Check if Player won the game.
+    if(scores[activePlayer] >= 10) {
+        // Declare Active Player Winner
+        document.querySelector('#name-' + activePlayer).textContent = 'Winner!';
+        document.querySelector('.dice').style.display = 'none';
+        document.querySelector('.player-' + activePlayer + '-panel').classList.toggle('active');
+        document.querySelector('.player-' + activePlayer + '-panel').classList.toggle('winner');
+    } else {
+        nextPlayer();
+    }
+    
+});
+
+function nextPlayer() {
         // Next Player
         // if (activePlayer === 0) {
         //     activePlayer = 1;
         // } else {
         //     activePlayer = 0;
         // }
+
+        // Current Score gets zeroed out.
         roundScore = 0;
+        
+        // Zero out current Active Player's current score.
         document.getElementById('current-' + activePlayer).textContent = roundScore;
+
+        // Remove Active from current Active Player
         document.querySelector('.player-' + activePlayer + '-panel').classList.remove('active');
+
+        // Change Active Player
         activePlayer === 0 ? activePlayer = 1 : activePlayer = 0;
+
+        // Add Active to new Active Player
         document.querySelector('.player-' + activePlayer + '-panel').classList.add('active');
+
+        // Make Dice Disappear
         document.querySelector('.dice').style.display = 'none';
         // Could use Toggle but seems better this way to me.
         // document.querySelector('.player-0-panel').classList.toggle('active');
         // document.querySelector('.player-1-panel').classList.toggle('active');
-    }
-
-
-
-}); // Callback function, function called by a function.
+}
 
 
 // DICE /////////////
