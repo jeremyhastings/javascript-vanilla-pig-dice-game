@@ -13,18 +13,7 @@ GAME RULES:
 
 var activePlayer, roundScore, scores;
 
-activePlayer = 0;
-roundScore = 0;
-scores = [0, 0];
-
-// Hide Dice at start of game.
-document.querySelector('.dice').style.display = 'none';
-
-// Zero out scores
-document.getElementById('score-0').textContent = '0';
-document.getElementById('score-1').textContent = '0';
-document.getElementById('current-0').textContent = '0';
-document.getElementById('current-1').textContent = '0';
+newGame();
 
 // https://developer.mozilla.org/en-US/docs/Web/Events
 document.querySelector('.btn-roll').addEventListener('click', function() {
@@ -56,7 +45,7 @@ document.querySelector('.btn-hold').addEventListener('click', function() {
     // Update UI.
     document.querySelector('#score-' + activePlayer).textContent = scores[activePlayer];
     // Check if Player won the game.
-    if(scores[activePlayer] >= 10) {
+    if(scores[activePlayer] >= 100) {
         // Declare Active Player Winner
         document.querySelector('#name-' + activePlayer).textContent = 'Winner!';
         document.querySelector('.dice').style.display = 'none';
@@ -67,6 +56,8 @@ document.querySelector('.btn-hold').addEventListener('click', function() {
     }
     
 });
+
+document.querySelector('.btn-new').addEventListener('click', newGame);
 
 function nextPlayer() {
         // Next Player
@@ -96,6 +87,36 @@ function nextPlayer() {
         // Could use Toggle but seems better this way to me.
         // document.querySelector('.player-0-panel').classList.toggle('active');
         // document.querySelector('.player-1-panel').classList.toggle('active');
+}
+
+function newGame() {
+    activePlayer = 0;
+    roundScore = 0;
+    scores = [0, 0];
+
+    // Zero out scores
+    document.getElementById('score-0').textContent = '0';
+    document.getElementById('score-1').textContent = '0';
+    document.getElementById('current-0').textContent = '0';
+    document.getElementById('current-1').textContent = '0';
+
+    // Hide Dice at start of game.
+    document.querySelector('.dice').style.display = 'none';
+
+    // Make sure players are named players and not winners.
+    document.querySelector('#name-0').textContent = 'Player 1';
+    document.querySelector('#name-1').textContent = 'Player 2';
+
+    // Remove Winner Class from both players.
+    document.querySelector('.player-0-panel').classList.remove('winner');
+    document.querySelector('.player-1-panel').classList.remove('winner');
+
+    // Remove Active Class from both players.
+    document.querySelector('.player-0-panel').classList.remove('active');
+    document.querySelector('.player-1-panel').classList.remove('active');
+
+    // Make Player 1 the Active Player
+    document.querySelector('.player-0-panel').classList.add('active');
 }
 
 
