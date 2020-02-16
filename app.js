@@ -11,7 +11,7 @@ GAME RULES:
 
 // Game Variables
 
-var activePlayer, gamePlaying, previousRoll, roundScore, scores;
+var activePlayer, finalScore, gamePlaying, previousRoll, roundScore, scores;
 
 newGame();
 
@@ -51,8 +51,18 @@ document.querySelector('.btn-hold').addEventListener('click', function() {
         roundScore = 0;
         // Update UI.
         document.querySelector('#score-' + activePlayer).textContent = scores[activePlayer];
+
+        var input = document.querySelector('.final-score').value;
+
+        input = true ? finalScore = input : finalScore = 100;
+        // if(input) {
+        //     finalScore = input;
+        // } else {
+        //     finalScore = 100;
+        // }
+        
         // Check if Player won the game.
-        if(scores[activePlayer] >= 100) {
+        if(scores[activePlayer] >= finalScore) {
             // Declare Active Player Winner
             document.querySelector('#name-' + activePlayer).textContent = 'Winner!';
             document.querySelector('.dice').style.display = 'none';
