@@ -11,7 +11,7 @@ GAME RULES:
 
 // Game Variables
 
-var activePlayer, gamePlaying, roundScore, scores;
+var activePlayer, finalScore, gamePlaying, roundScore, scores;
 
 newGame();
 
@@ -21,18 +21,31 @@ document.querySelector('.btn-roll').addEventListener('click', function() {
         // Using anonymous function instead of calling one.
         
         // 1. Random number
-        var dice = Math.floor(Math.random() * 6) + 1;
-        // 2. Display the result.
-        var diceDOM = document.querySelector('.dice')
-        diceDOM.style.display = 'block';
-        diceDOM.src = 'dice-' + dice +'.png';
-        // 3. Update the round score IF the rolled number is not 1.
-        if (dice !== 1) {
-            // Add Score
-            roundScore += dice;
-            document.querySelector('#current-' + activePlayer).textContent = roundScore;
-        } else {
+        var dice1 = Math.floor(Math.random() * 6) + 1;
+        var dice2 = Math.floor(Math.random() * 6) + 1;
+        if(dice1 === dice2) {
+            scores[activePlayer] = 0;
+            document.querySelector('#score-' + activePlayer).textContent = scores[activePlayer];
             nextPlayer();
+        } else {
+            // previousRoll = dice;
+            // 2. Display the result.
+            // var diceDOM = document.querySelector('.dice')
+            dice1DOM = document.getElementById('dice-1');
+            dice2DOM = document.getElementById('dice-2');
+
+            dice1DOM.style.display = 'block';
+            dice2DOM.style.display = 'block';
+            dice1DOM.src = 'dice-' + dice1 +'.png';
+            dice2DOM.src = 'dice-' + dice2 +'.png';
+            // 3. Update the round score IF the rolled number is not 1.
+            if (dice1 !== 1 && dice2 !== 1) {
+                // Add Score
+                roundScore += (dice1 + dice2);
+                document.querySelector('#current-' + activePlayer).textContent = roundScore;
+            } else {
+                nextPlayer();
+            }
         }
     }
 }); // Callback function, function called by a function.
@@ -44,11 +57,22 @@ document.querySelector('.btn-hold').addEventListener('click', function() {
         roundScore = 0;
         // Update UI.
         document.querySelector('#score-' + activePlayer).textContent = scores[activePlayer];
+
+        var input = document.querySelector('.final-score').value;
+
+        if(input) {
+            finalScore = input;
+        } else {
+            finalScore = 100;
+        }
+
         // Check if Player won the game.
-        if(scores[activePlayer] >= 100) {
+        if(scores[activePlayer] >= finalScore) {
             // Declare Active Player Winner
             document.querySelector('#name-' + activePlayer).textContent = 'Winner!';
-            document.querySelector('.dice').style.display = 'none';
+            document.getElementById('dice-1').style.display = 'none';
+            document.getElementById('dice-2').style.display = 'none';
+
             document.querySelector('.player-' + activePlayer + '-panel').classList.toggle('active');
             document.querySelector('.player-' + activePlayer + '-panel').classList.toggle('winner');
             gamePlaying = false;
@@ -84,10 +108,15 @@ function nextPlayer() {
         document.querySelector('.player-' + activePlayer + '-panel').classList.add('active');
 
         // Make Dice Disappear
-        document.querySelector('.dice').style.display = 'none';
+        document.getElementById('dice-1').style.display = 'none';
+        document.getElementById('dice-2').style.display = 'none';
+
         // Could use Toggle but seems better this way to me.
         // document.querySelector('.player-0-panel').classList.toggle('active');
         // document.querySelector('.player-1-panel').classList.toggle('active');
+
+        // Zero out previousRoll
+        // previousRoll = 0;
 }
 
 function newGame() {
@@ -103,7 +132,8 @@ function newGame() {
     document.getElementById('current-1').textContent = '0';
 
     // Hide Dice at start of game.
-    document.querySelector('.dice').style.display = 'none';
+    document.getElementById('dice-1').style.display = 'none';
+    document.getElementById('dice-2').style.display = 'none';
 
     // Make sure players are named players and not winners.
     document.querySelector('#name-0').textContent = 'Player 1';
