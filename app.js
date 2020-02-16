@@ -11,7 +11,7 @@ GAME RULES:
 
 // Game Variables
 
-var activePlayer, gamePlaying, roundScore, scores;
+var activePlayer, gamePlaying, previousRoll, roundScore, scores;
 
 newGame();
 
@@ -22,17 +22,24 @@ document.querySelector('.btn-roll').addEventListener('click', function() {
         
         // 1. Random number
         var dice = Math.floor(Math.random() * 6) + 1;
-        // 2. Display the result.
-        var diceDOM = document.querySelector('.dice')
-        diceDOM.style.display = 'block';
-        diceDOM.src = 'dice-' + dice +'.png';
-        // 3. Update the round score IF the rolled number is not 1.
-        if (dice !== 1) {
-            // Add Score
-            roundScore += dice;
-            document.querySelector('#current-' + activePlayer).textContent = roundScore;
-        } else {
+        if(dice === 6 && dice === previousRoll) {
+            scores[activePlayer] = 0;
+            document.querySelector('#score-' + activePlayer).textContent = scores[activePlayer];
             nextPlayer();
+        } else {
+            previousRoll = dice;
+            // 2. Display the result.
+            var diceDOM = document.querySelector('.dice')
+            diceDOM.style.display = 'block';
+            diceDOM.src = 'dice-' + dice +'.png';
+            // 3. Update the round score IF the rolled number is not 1.
+            if (dice !== 1) {
+                // Add Score
+                roundScore += dice;
+                document.querySelector('#current-' + activePlayer).textContent = roundScore;
+            } else {
+                nextPlayer();
+            }
         }
     }
 }); // Callback function, function called by a function.
@@ -88,6 +95,9 @@ function nextPlayer() {
         // Could use Toggle but seems better this way to me.
         // document.querySelector('.player-0-panel').classList.toggle('active');
         // document.querySelector('.player-1-panel').classList.toggle('active');
+
+        // Zero out previousRoll
+        previousRoll = 0;
 }
 
 function newGame() {
